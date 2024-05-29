@@ -8,6 +8,7 @@ export const firebaseConfig = {
   appId: import.meta.env.VITE_APP_ID,
 };
 
+// npm install firebase-tools -g
 // firebase login
 // firebase init
 // firebase deploy
