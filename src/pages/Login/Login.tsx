@@ -25,7 +25,7 @@ const Login = () => {
     });
   }, []);
 
-  const handleLogin = (e) => {
+  const handleLogin = (e: Event) => {
     e.preventDefault();
     setLoading(true);
     // Aqui você pode adicionar a lógica de autenticação, como enviar os dados para um servidor

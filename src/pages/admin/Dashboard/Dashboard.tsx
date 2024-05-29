@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 const Dashboard = () => {
   const navigate = useNavigate();
   const [auth, setAuth] = useState<any>(null);
+  console.log("auth", auth);
 
   useEffect(() => {
     const _auth = getAuth();
