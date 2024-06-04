@@ -10,5 +10,15 @@ export default function useForm(initValue: any) {
     }));
   };
 
-  return [initial, setValues];
+  const updateValues = (obj: any) => {
+    const keys = Object.keys(obj);
+    for (const key of keys) {
+      setInitial((old: any) => ({
+        ...old,
+        [key]: obj[key],
+      }));
+    }
+  };
+
+  return [initial, setValues, updateValues];
 }

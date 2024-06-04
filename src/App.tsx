@@ -91,7 +91,7 @@ function App() {
             path="/dashboard"
             element={
               <Suspense fallback={<Preloader load={true} />}>
-                <Dashboard />
+                <Dashboard db={db} />
               </Suspense>
             }
           />
