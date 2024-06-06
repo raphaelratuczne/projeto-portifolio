@@ -1,33 +1,19 @@
-import { Firestore, doc, getDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import homeLogo from "../../Assets/home-main.svg";
 import Particle from "../../components/Particle";
+import { useProfileContext } from "../../contexts/profileContext";
 import Home2 from "./Home2";
 import Type from "./Type";
 
-interface IHomeProps {
-  db: Firestore | null;
-}
+interface IHomeProps {}
 
-function Home({ db }: IHomeProps) {
-  const [greetings, setGreetings] = useState("");
-  const [iAm, setIAm] = useState("");
-  const [name, setName] = useState("");
+function Home({}: IHomeProps) {
+  const { greetings, iAm, name, loadValues } = useProfileContext();
 
   useEffect(() => {
-    async function init() {
-      const docRef = doc(db!, "portifolio", "home");
-      const docSnap = await getDoc(docRef);
-      console.log("docSnap", docSnap.data());
-      setGreetings(docSnap.data()!.greetings);
-      setIAm(docSnap.data()!["i-am"]);
-      setName(docSnap.data()!.name);
-    }
-    if (db) {
-      init();
-    }
-  }, [db]);
+    loadValues();
+  }, []);
 
   return (
     <section>
