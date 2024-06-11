@@ -10,6 +10,7 @@ import "./App.css";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import Preloader from "./components/Pre";
+import ProtectedRoute from "./components/ProtectedRoute";
 import ScrollToTop from "./components/ScrollToTop";
 import { ExportsContexts } from "./contexts/exportsContext";
 import "./style.css";
@@ -82,9 +83,11 @@ function App() {
             <Route
               path="/dashboard"
               element={
-                <Suspense fallback={<Preloader load={true} />}>
-                  <Dashboard />
-                </Suspense>
+                <ProtectedRoute>
+                  <Suspense fallback={<Preloader load={true} />}>
+                    <Dashboard />
+                  </Suspense>
+                </ProtectedRoute>
               }
             />
             <Route path="*" element={<Navigate to="/" />} />

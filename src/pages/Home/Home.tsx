@@ -6,9 +6,9 @@ import { useProfileContext } from "../../contexts/profileContext";
 import Home2 from "./Home2";
 import Type from "./Type";
 
-interface IHomeProps {}
+// interface IHomeProps {}
 
-function Home({}: IHomeProps) {
+function Home() {
   const { greetings, iAm, name, loadValues } = useProfileContext();
 
   useEffect(() => {

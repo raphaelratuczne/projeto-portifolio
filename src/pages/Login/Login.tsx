@@ -1,52 +1,28 @@
-import {
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../contexts/authContext";
 
 const Login = () => {
+  const { login, user } = useAuthContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [auth, setAuth] = useState<any>(null);
 
   useEffect(() => {
-    const _auth = getAuth();
-    setAuth(_auth);
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user]);
 
-    onAuthStateChanged(_auth, (user) => {
-      if (user) {
-        navigate("/dashboard");
-      }
-    });
-  }, []);
-
-  const handleLogin = (e: any) => {
+  const handleLogin = async (e: any) => {
     e.preventDefault();
     setLoading(true);
     // Aqui você pode adicionar a lógica de autenticação, como enviar os dados para um servidor
     console.log(`Email: ${email}, Password: ${password}`);
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed up
-        const user = userCredential.user;
-        console.log("user", user);
-        navigate("/dashboard");
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log("errorCode", errorCode, "errorMessage", errorMessage);
-        // ..
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    await login(email, password);
+    setLoading(false);
   };
 
   return (

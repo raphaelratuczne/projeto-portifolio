@@ -1,22 +1,17 @@
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
 import Sidebar from "../../../components/Sidebar";
-import { FirebaseContext } from "../../../contexts/firebaseContext";
+import { useAuthContext } from "../../../contexts/authContext";
 import { useProfileContext } from "../../../contexts/profileContext";
 import useForm from "../../../utils/hooks/useForm";
 
-interface IDashboardProps {}
+// interface IDashboardProps {}
 
-const Dashboard = ({}: IDashboardProps) => {
-  const { db } = useContext(FirebaseContext);
-  const navigate = useNavigate();
-  const [auth, setAuth] = useState<any>(null);
+const Dashboard = () => {
+  const { logout } = useAuthContext();
   const [validated, setValidated] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const { greetings, iAm, name, loadValues } = useProfileContext();
+  const { greetings, iAm, name, loadValues, saveValues, saving } =
+    useProfileContext();
 
   // const [valorInput, setValorInput] = useState("valor inicial");
 
@@ -27,15 +22,6 @@ const Dashboard = ({}: IDashboardProps) => {
   });
 
   useEffect(() => {
-    const _auth = getAuth();
-    setAuth(_auth);
-
-    onAuthStateChanged(_auth, (user) => {
-      if (!user) {
-        navigate("/login");
-      }
-    });
-
     if (!greetings) {
       loadValues();
     }
@@ -49,10 +35,6 @@ const Dashboard = ({}: IDashboardProps) => {
     });
   }, [greetings]);
 
-  function logout() {
-    signOut(auth);
-  }
-
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const _form = e.currentTarget;
@@ -61,17 +43,9 @@ const Dashboard = ({}: IDashboardProps) => {
       e.stopPropagation();
     } else {
       console.log("enviou");
-      setSaving(true);
-      await setDoc(doc(db!, "portifolio", "home"), {
-        greetings: form.greetings,
-        "i-am": form.iAm,
-        name: form.name,
-      });
-      setTimeout(() => {
-        setSaving(false);
-        setValidated(false);
-        loadValues();
-      }, 2000);
+      await saveValues(form);
+      setValidated(false);
+      loadValues();
     }
     setValidated(true);
   };
