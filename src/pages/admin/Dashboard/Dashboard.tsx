@@ -10,7 +10,7 @@ import useForm from "../../../utils/hooks/useForm";
 const Dashboard = () => {
   const { logout } = useAuthContext();
   const [validated, setValidated] = useState(false);
-  const { greetings, iAm, name, loadValues, saveValues, saving } =
+  const { greetings, iAm, name, jobs, loadValues, saveValues, saving } =
     useProfileContext();
 
   // const [valorInput, setValorInput] = useState("valor inicial");
@@ -19,6 +19,7 @@ const Dashboard = () => {
     greetings,
     iAm,
     name,
+    jobs,
   });
 
   useEffect(() => {
@@ -32,6 +33,7 @@ const Dashboard = () => {
       greetings,
       iAm,
       name,
+      jobs,
     });
   }, [greetings]);
 
@@ -115,6 +117,20 @@ const Dashboard = () => {
                   <Form.Control.Feedback type="invalid">
                     Digite seu nome
                   </Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group
+                  className="mb-3"
+                  controlId="exampleForm.ControlTextarea1"
+                >
+                  <Form.Label>Jobs</Form.Label>
+                  <Form.Control
+                    name="jobs"
+                    as="textarea"
+                    rows={3}
+                    value={form.jobs}
+                    onChange={setForm}
+                  />
                 </Form.Group>
 
                 <br />

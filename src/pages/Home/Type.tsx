@@ -1,15 +1,14 @@
 import Typewriter from "typewriter-effect";
 
-function Type() {
+interface ITypeProps {
+  arrayValues: string[];
+}
+
+function Type({ arrayValues = ["teste"] }: ITypeProps) {
   return (
     <Typewriter
       options={{
-        strings: [
-          "Software Developer",
-          "Freelancer",
-          "MERN Stack Developer",
-          "Open Source Contributor",
-        ],
+        strings: arrayValues,
         autoStart: true,
         loop: true,
         deleteSpeed: 50,

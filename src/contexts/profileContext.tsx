@@ -6,6 +6,7 @@ interface IExportsContext {
   greetings: string;
   iAm: string;
   name: string;
+  jobs: string;
   saving: boolean;
   loadValues: () => Promise<void>;
   saveValues: (data: IDataPortifolio) => Promise<void>;
@@ -15,12 +16,14 @@ interface IDataPortifolio {
   greetings: string;
   iAm: string;
   name: string;
+  jobs: string;
 }
 
 const initialValue: IExportsContext = {
   greetings: "",
   iAm: "",
   name: "",
+  jobs: "",
   saving: false,
   loadValues: () => Promise.resolve(),
   saveValues: () => Promise.resolve(),
@@ -33,6 +36,7 @@ const ProfileProvider = ({ children }: any) => {
   const [greetings, setGreetings] = useState("");
   const [iAm, setIAm] = useState("");
   const [name, setName] = useState("");
+  const [jobs, setJobs] = useState("");
   const [saving, setSaving] = useState(false);
 
   const loadValues = async () => {
@@ -43,6 +47,8 @@ const ProfileProvider = ({ children }: any) => {
       setGreetings(docSnap.data()!.greetings);
       setIAm(docSnap.data()!["i-am"]);
       setName(docSnap.data()!.name);
+      const textJobs = (docSnap.data()!.jobs as Array<string>).join("\n");
+      setJobs(textJobs);
     }
   };
 
@@ -53,6 +59,7 @@ const ProfileProvider = ({ children }: any) => {
         greetings: data.greetings,
         "i-am": data.iAm,
         name: data.name,
+        jobs: data.jobs.split("\n"),
       });
       setSaving(false);
     }
@@ -60,7 +67,7 @@ const ProfileProvider = ({ children }: any) => {
 
   return (
     <ProfileContext.Provider
-      value={{ greetings, iAm, name, loadValues, saveValues, saving }}
+      value={{ greetings, iAm, name, jobs, loadValues, saveValues, saving }}
     >
       {children}
     </ProfileContext.Provider>

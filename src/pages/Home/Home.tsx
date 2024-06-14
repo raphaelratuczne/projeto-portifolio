@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import homeLogo from "../../Assets/home-main.svg";
 import Particle from "../../components/Particle";
@@ -9,11 +9,18 @@ import Type from "./Type";
 // interface IHomeProps {}
 
 function Home() {
-  const { greetings, iAm, name, loadValues } = useProfileContext();
+  const { greetings, iAm, name, jobs, loadValues } = useProfileContext();
+  const [arrayJobs, setArrayJobs] = useState<string[]>([]);
 
   useEffect(() => {
     loadValues();
   }, []);
+
+  useEffect(() => {
+    if (jobs) {
+      setArrayJobs(jobs.split("\n"));
+    }
+  }, [jobs]);
 
   return (
     <section>
@@ -35,7 +42,7 @@ function Home() {
               </h1>
 
               <div style={{ padding: 50, textAlign: "left" }}>
-                <Type />
+                <Type arrayValues={arrayJobs} />
               </div>
             </Col>
 
