@@ -1,5 +1,5 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { createContext, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 import { useFirebaseContext } from "./firebaseContext";
 
 interface IExportsContext {
@@ -39,7 +39,7 @@ const ProfileProvider = ({ children }: any) => {
   const [jobs, setJobs] = useState("");
   const [saving, setSaving] = useState(false);
 
-  const loadValues = async () => {
+  const loadValues = useCallback(async () => {
     if (db) {
       const docRef = doc(db!, "portifolio", "home");
       const docSnap = await getDoc(docRef);
@@ -50,20 +50,23 @@ const ProfileProvider = ({ children }: any) => {
       const textJobs = (docSnap.data()!.jobs as Array<string>).join("\n");
       setJobs(textJobs);
     }
-  };
+  }, [db, setGreetings, setIAm, setName, setJobs]);
 
-  const saveValues = async (data: IDataPortifolio) => {
-    if (!saving) {
-      setSaving(true);
-      await setDoc(doc(db!, "portifolio", "home"), {
-        greetings: data.greetings,
-        "i-am": data.iAm,
-        name: data.name,
-        jobs: data.jobs.split("\n"),
-      });
-      setSaving(false);
-    }
-  };
+  const saveValues = useCallback(
+    async (data: IDataPortifolio) => {
+      if (!saving) {
+        setSaving(true);
+        await setDoc(doc(db!, "portifolio", "home"), {
+          greetings: data.greetings,
+          "i-am": data.iAm,
+          name: data.name,
+          jobs: data.jobs.split("\n"),
+        });
+        setSaving(false);
+      }
+    },
+    [db, saving, setSaving]
+  );
 
   return (
     <ProfileContext.Provider

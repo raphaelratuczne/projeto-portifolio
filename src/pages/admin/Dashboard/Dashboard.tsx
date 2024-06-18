@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import Sidebar from "../../../components/Sidebar";
 import { useAuthContext } from "../../../contexts/authContext";
@@ -37,20 +37,23 @@ const Dashboard = () => {
     });
   }, [greetings]);
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    const _form = e.currentTarget;
-    if (_form.checkValidity() === false) {
+  const handleSubmit = useCallback(
+    async (e: any) => {
       e.preventDefault();
-      e.stopPropagation();
-    } else {
-      console.log("enviou");
-      await saveValues(form);
-      setValidated(false);
-      loadValues();
-    }
-    setValidated(true);
-  };
+      const _form = e.currentTarget;
+      if (_form.checkValidity() === false) {
+        e.preventDefault();
+        e.stopPropagation();
+      } else {
+        console.log("enviou");
+        await saveValues(form);
+        setValidated(false);
+        loadValues();
+      }
+      setValidated(true);
+    },
+    [form, saveValues, setValidated, loadValues]
+  );
 
   return (
     <section>

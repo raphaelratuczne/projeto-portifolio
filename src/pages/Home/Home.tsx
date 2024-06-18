@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import homeLogo from "../../Assets/home-main.svg";
 import Particle from "../../components/Particle";
@@ -10,16 +10,16 @@ import Type from "./Type";
 
 function Home() {
   const { greetings, iAm, name, jobs, loadValues } = useProfileContext();
-  const [arrayJobs, setArrayJobs] = useState<string[]>([]);
 
   useEffect(() => {
     loadValues();
   }, []);
 
-  useEffect(() => {
+  const arrayJobs = useMemo(() => {
     if (jobs) {
-      setArrayJobs(jobs.split("\n"));
+      return jobs.split("\n");
     }
+    return [];
   }, [jobs]);
 
   return (
