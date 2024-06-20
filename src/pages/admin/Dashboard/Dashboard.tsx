@@ -1,19 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import Sidebar from "../../../components/Sidebar";
-import { useAuthContext } from "../../../contexts/authContext";
 import { useProfileContext } from "../../../contexts/profileContext";
 import useForm from "../../../utils/hooks/useForm";
 
 // interface IDashboardProps {}
 
 const Dashboard = () => {
-  const { logout } = useAuthContext();
   const [validated, setValidated] = useState(false);
   const { greetings, iAm, name, jobs, loadValues, saveValues, saving } =
     useProfileContext();
-
-  // const [valorInput, setValorInput] = useState("valor inicial");
 
   const [form, setForm, updateForm] = useForm({
     greetings,
@@ -62,18 +58,8 @@ const Dashboard = () => {
           <Sidebar />
           <Row className="justify-content-md-center">
             <Col md={4} className="login-col">
-              <Button variant="primary" type="button" onClick={logout}>
-                Logout
-              </Button>
-
               <h2>Conteudo Home</h2>
               <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                {/* <input
-                  type="text"
-                  value={valorInput}
-                  onChange={(e) => setValorInput(e.target.value)}
-                /> */}
-
                 <Form.Group controlId="formBasicGreeting">
                   <Form.Label>Saudação</Form.Label>
                   <Form.Control
