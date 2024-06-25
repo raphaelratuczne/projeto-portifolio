@@ -1,5 +1,5 @@
-// import { getDoc addDoc, collection,} from "firebase/firestore";
-import { doc, setDoc } from "firebase/firestore";
+// import { getDoc,setDoc} from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import { createContext, useContext } from "react";
 import { useFirebaseContext } from "./firebaseContext";
 
@@ -17,11 +17,8 @@ const ProjectsProvider = ({ children }: any) => {
   const { db } = useFirebaseContext();
 
   const saveProject = async (project: any) => {
-    await setDoc(doc(db!, "portifolio", "projects", "123456teste"), project);
-    // const docRef = await addDoc(collection(db!, "portifolio", "projects"), {
-    //   ...project,
-    // });
-    // console.log("Document written with ID: ", docRef.id);
+    const docRef = await addDoc(collection(db!, "projects"), project);
+    console.log("Document written with ID: ", docRef.id);
   };
   return (
     <ProjectsContext.Provider value={{ saveProject }}>

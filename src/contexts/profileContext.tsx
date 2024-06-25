@@ -41,7 +41,7 @@ const ProfileProvider = ({ children }: any) => {
 
   const loadValues = useCallback(async () => {
     if (db) {
-      const docRef = doc(db!, "portifolio", "home");
+      const docRef = doc(db!, "home", "homeData");
       const docSnap = await getDoc(docRef);
       // console.log("docSnap", docSnap.data());
       setGreetings(docSnap.data()!.greetings);
@@ -56,7 +56,7 @@ const ProfileProvider = ({ children }: any) => {
     async (data: IDataPortifolio) => {
       if (!saving) {
         setSaving(true);
-        await setDoc(doc(db!, "portifolio", "home"), {
+        await setDoc(doc(db!, "home", "homeData"), {
           greetings: data.greetings,
           "i-am": data.iAm,
           name: data.name,
