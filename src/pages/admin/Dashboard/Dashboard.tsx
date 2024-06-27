@@ -56,7 +56,7 @@ const Dashboard = () => {
       <Container fluid className="login-section" id="home">
         <Container className="mt-5">
           <Sidebar />
-          <Row className="justify-content-md-center">
+          <Row className="" style={{ marginLeft: "50px" }}>
             <Col md={4} className="login-col">
               <h2>Conteudo Home</h2>
               <Form noValidate validated={validated} onSubmit={handleSubmit}>

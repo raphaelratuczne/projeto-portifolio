@@ -3,7 +3,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { useProjectsContext } from "../../../contexts/projectsContext";
 
 const ModalProjects = () => {
-  const { saveProject } = useProjectsContext();
+  const { saveProject, getListProjects } = useProjectsContext();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -38,6 +38,7 @@ const ModalProjects = () => {
         github,
         demo,
       });
+      await getListProjects();
       setSaving(false);
       handleClose();
     }, 1000);
