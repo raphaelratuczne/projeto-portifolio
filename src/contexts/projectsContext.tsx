@@ -1,10 +1,10 @@
 // import { getDoc,setDoc} from "firebase/firestore";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, setDoc } from "firebase/firestore";
 import { createContext, useContext, useState } from "react";
 import { useFirebaseContext } from "./firebaseContext";
 
-interface IProject {
-  id: string;
+export interface IProject {
+  id?: string;
   demo: string;
   description: string;
   github: string;
@@ -13,12 +13,14 @@ interface IProject {
 
 interface IProjectsContext {
   saveProject: (project: any) => Promise<void>;
+  updateProject: (id: string, project: any) => Promise<void>;
   getListProjects: () => Promise<void>;
   projects: IProject[];
 }
 
 const initialValue: IProjectsContext = {
   saveProject: () => Promise.resolve(),
+  updateProject: () => Promise.resolve(),
   getListProjects: () => Promise.resolve(),
   projects: [],
 };
@@ -29,9 +31,14 @@ const ProjectsProvider = ({ children }: any) => {
   const { db } = useFirebaseContext();
   const [projects, setProjects] = useState<IProject[]>([]);
 
-  const saveProject = async (project: any) => {
+  const saveProject = async (project: IProject) => {
     const docRef = await addDoc(collection(db!, "projects"), project);
     console.log("Document written with ID: ", docRef.id);
+  };
+
+  const updateProject = async (id: string, project: IProject) => {
+    await setDoc(doc(db!, "projects", id), project);
+    // console.log("Document written with ID: ", docRef.id);
   };
 
   const getListProjects = async () => {
@@ -52,7 +59,7 @@ const ProjectsProvider = ({ children }: any) => {
 
   return (
     <ProjectsContext.Provider
-      value={{ saveProject, getListProjects, projects }}
+      value={{ saveProject, updateProject, getListProjects, projects }}
     >
       {children}
     </ProjectsContext.Provider>

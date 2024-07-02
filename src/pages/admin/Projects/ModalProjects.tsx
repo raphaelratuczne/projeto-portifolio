@@ -1,10 +1,20 @@
-import { useState } from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
-import { useProjectsContext } from "../../../contexts/projectsContext";
+import {
+  IProject,
+  useProjectsContext,
+} from "../../../contexts/projectsContext";
 
-const ModalProjects = () => {
-  const { saveProject, getListProjects } = useProjectsContext();
+const ModalProjects = forwardRef((_, ref) => {
+  const { saveProject, updateProject, getListProjects } = useProjectsContext();
 
+  useImperativeHandle(ref, () => {
+    return {
+      handleOpenAndFillModal,
+    };
+  });
+
+  const [id, setId] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [github, setGithub] = useState("");
@@ -15,11 +25,22 @@ const ModalProjects = () => {
   const [show, setShow] = useState(false);
 
   function clearForm() {
+    setId("");
     setTitle("");
     setDescription("");
     setGithub("");
     setDemo("");
     // setImage("");
+  }
+
+  function handleOpenAndFillModal(project: IProject) {
+    setId(project.id!);
+    setTitle(project.title);
+    setDescription(project.description);
+    setGithub(project.github);
+    setDemo(project.demo);
+    // setImage(project.image);
+    handleShow();
   }
 
   const handleClose = () => {
@@ -32,12 +53,21 @@ const ModalProjects = () => {
     e.preventDefault();
     setSaving(true);
     setTimeout(async () => {
-      await saveProject({
-        title,
-        description,
-        github,
-        demo,
-      });
+      if (id) {
+        await updateProject(id, {
+          title,
+          description,
+          github,
+          demo,
+        });
+      } else {
+        await saveProject({
+          title,
+          description,
+          github,
+          demo,
+        });
+      }
       await getListProjects();
       setSaving(false);
       handleClose();
@@ -137,6 +167,6 @@ const ModalProjects = () => {
       </Modal>
     </>
   );
-};
+});
 
 export default ModalProjects;
