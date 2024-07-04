@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import {
   IProject,
@@ -19,10 +19,14 @@ const ModalProjects = forwardRef((_, ref) => {
   const [description, setDescription] = useState("");
   const [github, setGithub] = useState("");
   const [demo, setDemo] = useState("");
-  // const [image, setImage] = useState("");
+  const [image, setImage] = useState<File | any>(null);
   const validated = false;
   const [saving, setSaving] = useState(false);
   const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    console.log("image", image);
+  }, [image]);
 
   function clearForm() {
     setId("");
@@ -30,7 +34,7 @@ const ModalProjects = forwardRef((_, ref) => {
     setDescription("");
     setGithub("");
     setDemo("");
-    // setImage("");
+    setImage(null);
   }
 
   function handleOpenAndFillModal(project: IProject) {
@@ -54,19 +58,26 @@ const ModalProjects = forwardRef((_, ref) => {
     setSaving(true);
     setTimeout(async () => {
       if (id) {
-        await updateProject(id, {
-          title,
-          description,
-          github,
-          demo,
-        });
+        await updateProject(
+          id,
+          {
+            title,
+            description,
+            github,
+            demo,
+          },
+          image
+        );
       } else {
-        await saveProject({
-          title,
-          description,
-          github,
-          demo,
-        });
+        await saveProject(
+          {
+            title,
+            description,
+            github,
+            demo,
+          },
+          image
+        );
       }
       await getListProjects();
       setSaving(false);
@@ -147,7 +158,10 @@ const ModalProjects = forwardRef((_, ref) => {
 
             <Form.Group className="mt-3" controlId="formFileImage">
               <Form.Label>Selecione uma imagem</Form.Label>
-              <Form.Control type="file" />
+              <Form.Control
+                type="file"
+                onChange={(e) => setImage((e.target as any).files[0])}
+              />
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
