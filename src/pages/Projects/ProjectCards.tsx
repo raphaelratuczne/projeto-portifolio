@@ -4,10 +4,10 @@ import { BsGithub } from "react-icons/bs";
 import { CgWebsite } from "react-icons/cg";
 
 interface ProjectCardsProps {
-  imgPath: string;
+  imgPath?: string;
   title: string;
   description: string;
-  ghLink: string;
+  ghLink?: string;
   isBlog: boolean;
   demoLink?: string;
 }
@@ -22,14 +22,17 @@ function ProjectCards({
 }: ProjectCardsProps) {
   return (
     <Card className="project-card-view">
-      <Card.Img variant="top" src={imgPath} alt="card-img" />
+      {imgPath && <Card.Img variant="top" src={imgPath} alt="card-img" />}
       <Card.Body>
         <Card.Title>{title}</Card.Title>
         <Card.Text style={{ textAlign: "justify" }}>{description}</Card.Text>
-        <Button variant="primary" href={ghLink} target="_blank">
-          <BsGithub /> &nbsp;
-          {isBlog ? "Blog" : "GitHub"}
-        </Button>
+        {ghLink && (
+          <Button variant="primary" href={ghLink} target="_blank">
+            <BsGithub /> &nbsp;
+            {isBlog ? "Blog" : "GitHub"}
+          </Button>
+        )}
+
         {"\n"}
         {"\n"}
 

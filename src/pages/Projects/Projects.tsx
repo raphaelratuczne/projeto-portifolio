@@ -1,14 +1,16 @@
+import { useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import bitsOfCode from "../../Assets/Projects/blog.png";
-import chatify from "../../Assets/Projects/chatify.png";
-import editor from "../../Assets/Projects/codeEditor.png";
-import emotion from "../../Assets/Projects/emotion.png";
-import leaf from "../../Assets/Projects/leaf.png";
-import suicide from "../../Assets/Projects/suicide.png";
 import Particle from "../../components/Particle";
+import { useProjectsContext } from "../../contexts/projectsContext";
 import ProjectCard from "./ProjectCards";
 
 function Projects() {
+  const { getListProjects, projects, getFullPathImage } = useProjectsContext();
+  useEffect(() => {
+    if (projects.length === 0) {
+      getListProjects();
+    }
+  }, [projects, getListProjects]);
   return (
     <Container fluid className="project-section">
       <Particle />
@@ -20,7 +22,20 @@ function Projects() {
           Here are a few projects I've worked on recently.
         </p>
         <Row style={{ justifyContent: "center", paddingBottom: "10px" }}>
-          <Col md={4} className="project-card">
+          {projects.map((p) => (
+            <Col key={p.id} md={4} className="project-card">
+              <ProjectCard
+                imgPath={getFullPathImage(p.image)}
+                isBlog={false}
+                title={p.title}
+                description={p.description}
+                ghLink={p.github}
+                demoLink={p.demo}
+              />
+            </Col>
+          ))}
+
+          {/* <Col md={4} className="project-card">
             <ProjectCard
               imgPath={chatify}
               isBlog={false}
@@ -29,9 +44,9 @@ function Projects() {
               ghLink="https://github.com/soumyajit4419/Chatify"
               demoLink="https://chatify-49.web.app/"
             />
-          </Col>
+          </Col> */}
 
-          <Col md={4} className="project-card">
+          {/* <Col md={4} className="project-card">
             <ProjectCard
               imgPath={bitsOfCode}
               isBlog={false}
@@ -40,9 +55,9 @@ function Projects() {
               ghLink="https://github.com/soumyajit4419/Bits-0f-C0de"
               demoLink="https://blogs.soumya-jit.tech/"
             />
-          </Col>
+          </Col> */}
 
-          <Col md={4} className="project-card">
+          {/* <Col md={4} className="project-card">
             <ProjectCard
               imgPath={editor}
               isBlog={false}
@@ -51,9 +66,9 @@ function Projects() {
               ghLink="https://github.com/soumyajit4419/Editor.io"
               demoLink="https://editor.soumya-jit.tech/"
             />
-          </Col>
+          </Col> */}
 
-          <Col md={4} className="project-card">
+          {/* <Col md={4} className="project-card">
             <ProjectCard
               imgPath={leaf}
               isBlog={false}
@@ -62,9 +77,9 @@ function Projects() {
               ghLink="https://github.com/soumyajit4419/Plant_AI"
               demoLink="https://plant49-ai.herokuapp.com/"
             />
-          </Col>
+          </Col> */}
 
-          <Col md={4} className="project-card">
+          {/* <Col md={4} className="project-card">
             <ProjectCard
               imgPath={suicide}
               isBlog={false}
@@ -73,9 +88,9 @@ function Projects() {
               ghLink="https://github.com/soumyajit4419/AI_For_Social_Good"
               // demoLink="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley" <--------Please include a demo link here
             />
-          </Col>
+          </Col> */}
 
-          <Col md={4} className="project-card">
+          {/* <Col md={4} className="project-card">
             <ProjectCard
               imgPath={emotion}
               isBlog={false}
@@ -85,7 +100,7 @@ function Projects() {
               ghLink="https://github.com/soumyajit4419/Face_And_Emotion_Detection"
               // demoLink="https://blogs.soumya-jit.tech/"      <--------Please include a demo link here
             />
-          </Col>
+          </Col> */}
         </Row>
       </Container>
     </Container>

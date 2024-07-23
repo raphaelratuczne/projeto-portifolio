@@ -16,6 +16,7 @@ export interface IProject {
   description: string;
   github: string;
   title: string;
+  image: string;
 }
 
 interface IProjectsContext {
@@ -23,6 +24,7 @@ interface IProjectsContext {
   updateProject: (id: string, project: any, image: File) => Promise<void>;
   getListProjects: () => Promise<void>;
   projects: IProject[];
+  getFullPathImage: (imagePath: string) => string;
 }
 
 const initialValue: IProjectsContext = {
@@ -30,6 +32,7 @@ const initialValue: IProjectsContext = {
   updateProject: () => Promise.resolve(),
   getListProjects: () => Promise.resolve(),
   projects: [],
+  getFullPathImage: () => "",
 };
 
 const ProjectsContext = createContext(initialValue);
@@ -39,18 +42,21 @@ const ProjectsProvider = ({ children }: any) => {
   const [projects, setProjects] = useState<IProject[]>([]);
 
   const saveProject = async (project: IProject, image: File) => {
+    console.log("project", project);
     const docRef = await addDoc(collection(db!, "projects"), project);
     console.log("Document written with ID: ", docRef.id);
-    const ext = image.name.split(".").pop();
-    const imgName = `projects/${docRef.id}.${ext}`;
-    const imageRef = ref(storage!, imgName);
-    await uploadBytes(imageRef, image);
-    // atualiza o doc com o nome da imagem que subiu
-    await setDoc(
-      doc(db!, "projects", docRef.id),
-      { image: imgName },
-      { merge: true }
-    );
+    if (image) {
+      const ext = image.name.split(".").pop();
+      const imgName = `projects/${docRef.id}.${ext}`;
+      const imageRef = ref(storage!, imgName);
+      await uploadBytes(imageRef, image);
+      // atualiza o doc com o nome da imagem que subiu
+      await setDoc(
+        doc(db!, "projects", docRef.id),
+        { image: imgName },
+        { merge: true }
+      );
+    }
   };
 
   const updateProject = async (id: string, project: IProject, image: File) => {
@@ -84,14 +90,29 @@ const ProjectsProvider = ({ children }: any) => {
         description: doc.data().description,
         github: doc.data().github,
         title: doc.data().title,
+        image: doc.data().image,
       });
       setProjects(listProjects);
     });
   };
 
+  const getFullPathImage = (imagePath: string) => {
+    if (imagePath) {
+      const _imagePath = imagePath.replace("/", "%2F");
+      return `https://firebasestorage.googleapis.com/v0/b/projeto-portifolio-b3cc3.appspot.com/o/${_imagePath}?alt=media`;
+    }
+    return imagePath;
+  };
+
   return (
     <ProjectsContext.Provider
-      value={{ saveProject, updateProject, getListProjects, projects }}
+      value={{
+        saveProject,
+        updateProject,
+        getListProjects,
+        projects,
+        getFullPathImage,
+      }}
     >
       {children}
     </ProjectsContext.Provider>
